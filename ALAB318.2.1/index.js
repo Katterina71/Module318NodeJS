@@ -4,7 +4,15 @@ const app = express()
 const port = 3000;
 const hostname = '127.0.0.1';
 
+
 const fs = require('fs');
+
+//Vs 1.0 add css file
+// app.use(express.static('styles'))
+
+//Vs 2.0 add css file
+const path = require('path');
+app.use(express.static(path.join(__dirname, 'styles')));
 
 app.engine("lab", (filepath, options, callback) => {
     fs.readFile(filepath, (err, content) =>{
@@ -46,6 +54,7 @@ app.get("/register", (req,res) =>{
     res.render("register", options);
 })
 
+
 //Route to the about page
 app.get("/about", (req,res) =>{
     const options = {
@@ -85,6 +94,12 @@ app.get('/download',function(req,res) {
     })
 })
 
+
+// Page not found
+app.use((req, res, next)=>{
+    res.status(404).send('<h1> Page not found </h1>');
+    next();
+ });
 
 app.listen(port, ()=> {
     console.log(`Server listening on port: http://${hostname}:${port}/`);
