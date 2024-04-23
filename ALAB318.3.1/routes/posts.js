@@ -4,6 +4,35 @@ const router = express.Router();
 const posts = require("../data/posts");
 const error = require("../utilities/error");
 
+
+// find a specific user's posts 
+router
+  .get('/userId/:userId', (req, res) => {
+    let filteredPosts = posts.filter(p => p.userId == req.params.userId)
+    res.json(filteredPosts)
+  })
+
+
+
+// GET /api/posts?userId=<VALUE>
+// Retrieves all posts by a user with the specified postId.
+// It is common for APIs to have multiple endpoints that accomplish the same task. This route uses a "userId" query parameter to filter posts, while the one above uses a route parameter.
+// router 
+// .get('/', (req, res) => {
+//   debugger
+//   if (!req.query.userId) {
+//       return res.status(400).json({ error: "UserId parameter is required" });
+//   }
+
+//   const filteredPosts = posts.filter(p => p.userId === req.query.userId);
+//   if (filteredPosts.length === 0) {
+//       return res.status(404).json({ error: "No posts found for the given userId" });
+//   }
+
+//   res.json(filteredPosts);
+// });
+
+
 router
   .route("/")
   .get((req, res) => {
@@ -53,11 +82,17 @@ router
     else next();
   })
   .patch((req, res, next) => {
+    console.log('Hello!')
     const post = posts.find((p, i) => {
       if (p.id == req.params.id) {
-        for (const key in req.body) {
+        console.log('this match')
+        console.log(posts[i]);
+        console.log(req.body);
+        for (const key of Object.keys(req.body)) {
           posts[i][key] = req.body[key];
+          console.log(key);
         }
+        console.log(posts[i]);
         return true;
       }
     });
