@@ -4,4 +4,31 @@ h1 {
 
 body {
     background-color: rgb(202, 224, 224);
+    padding-left: 40px;
+}
+
+button {
+    margin-top: 20px;
+    height: 30px;
+    width: 140px;
+    background-color: aliceblue;
+    color: rgb(58, 58, 58);
+    border: 0px;
+    border-radius: 5px;
+}
+
+button:hover{
+    background-color: rgb(58, 58, 58); 
+    color: aliceblue;
+    cursor: pointer;
+}
+
+input {
+    background-color: rgb(255, 255, 255);
+    color: rgb(58, 58, 58);
+    border: 0px;
+    height: 30px;
+    width: 140px;
+    margin-right: 10px;
+    padding-left: 15px;
 }

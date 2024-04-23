@@ -5,15 +5,14 @@ const port = 3000;
 const hostname = '127.0.0.1';
 
 
-const fs = require('fs');
 
-//Vs 1.0 add css file
-// app.use(express.static('styles'))
 
 //Vs 2.0 add css file
 const path = require('path');
 app.use(express.static(path.join(__dirname, 'styles')));
 
+//method to create your own template engine
+const fs = require('fs');
 app.engine("lab", (filepath, options, callback) => {
     fs.readFile(filepath, (err, content) =>{
         if (err) return callback(err);
@@ -26,9 +25,9 @@ app.engine("lab", (filepath, options, callback) => {
         return callback(null, rendered);
     })
 })
-
 app.set("views", "./views");
 app.set("view engine", "lab");
+
 
 //Route to the home page
 app.get("/", (req,res) =>{
@@ -72,6 +71,7 @@ app.use(express.urlencoded({ extended: true }));
 // Middleware to parse JSON bodies
 app.use(express.json());
 
+//get parameters from form
 app.post("/register", (req, res) => {
     const username = req.body.username; 
     const email = req.body.email;
@@ -79,13 +79,7 @@ app.post("/register", (req, res) => {
     console.log(`${username} and ${email}`)
 })
 
-app.get("/", (req, res) => {
-    res.download("./img/meditation.jpg", "meditation.jpg", (error) => {
-        console.log("Error : ", error)
-    })
-})
-
-
+//download image by click on the button
 app.get('/download',function(req,res) {
     console.log('download file');
      
