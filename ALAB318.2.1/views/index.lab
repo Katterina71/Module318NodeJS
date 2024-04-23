@@ -9,6 +9,9 @@
     <div id="app">
       <h1>#title#</h1>
       <div>#content#</div>
+      <form action="/download" method="get">
+        <button type="submit">Download image</button>
+       </form>
     </div>
   </body>
 </html>

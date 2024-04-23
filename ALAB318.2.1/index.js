@@ -70,6 +70,21 @@ app.post("/register", (req, res) => {
     console.log(`${username} and ${email}`)
 })
 
+app.get("/", (req, res) => {
+    res.download("./img/meditation.jpg", "meditation.jpg", (error) => {
+        console.log("Error : ", error)
+    })
+})
+
+
+app.get('/download',function(req,res) {
+    console.log('download file');
+     
+    res.download("./img/meditation.jpg", (error) => {
+        console.log("Error : ", error)
+    })
+})
+
 
 app.listen(port, ()=> {
     console.log(`Server listening on port: http://${hostname}:${port}/`);
