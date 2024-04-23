@@ -57,6 +57,19 @@ app.get("/about", (req,res) =>{
     res.render("about", options);
 })
 
+// Middleware to parse URL-encoded bodies
+app.use(express.urlencoded({ extended: true }));
+
+// Middleware to parse JSON bodies
+app.use(express.json());
+
+app.post("/register", (req, res) => {
+    const username = req.body.username; 
+    const email = req.body.email;
+    res.send(`Username: ${username}, Email: ${email}`);
+    console.log(`${username} and ${email}`)
+})
+
 
 app.listen(port, ()=> {
     console.log(`Server listening on port: http://${hostname}:${port}/`);
