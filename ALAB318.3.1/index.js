@@ -1,26 +1,25 @@
 const express = require("express");
+const app = express();
+const port = 3000;
+
+
 const bodyParser = require("body-parser");
 
 const users = require("./routes/users");
 const posts = require("./routes/posts");
+const comments = require("./routes/comments");
 
 const error = require("./utilities/error");
 
-const app = express();
-const port = 3000;
 
 // Parsing Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json({ extended: true }));
 
-// Logging Middlewaare
+// Logging Middleware
 app.use((req, res, next) => {
   const time = new Date();
-
-  console.log(
-    `-----
-${time.toLocaleTimeString()}: Received a ${req.method} request to ${req.url}.`
-  );
+  console.log(`-----${time.toLocaleTimeString()}: Received a ${req.method} request to ${req.url}.`);
   if (Object.keys(req.body).length > 0) {
     console.log("Containing the data:");
     console.log(`${JSON.stringify(req.body)}`);
@@ -53,6 +52,7 @@ app.use("/api", function (req, res, next) {
 // Use our Routes
 app.use("/api/users", users);
 app.use("/api/posts", posts);
+app.use("/api/comments", comments);
 
 // Adding some HATEOAS links.
 app.get("/", (req, res) => {
@@ -90,6 +90,11 @@ app.get("/api", (req, res) => {
         href: "api/posts",
         rel: "posts",
         type: "POST",
+      },
+      {
+        href: "api/comments",
+        rel: "comments",
+        type: "GET",
       },
     ],
   });

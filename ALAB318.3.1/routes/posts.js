@@ -13,26 +13,6 @@ router
   })
 
 
-
-// GET /api/posts?userId=<VALUE>
-// Retrieves all posts by a user with the specified postId.
-// It is common for APIs to have multiple endpoints that accomplish the same task. This route uses a "userId" query parameter to filter posts, while the one above uses a route parameter.
-// router 
-// .get('/', (req, res) => {
-//   debugger
-//   if (!req.query.userId) {
-//       return res.status(400).json({ error: "UserId parameter is required" });
-//   }
-
-//   const filteredPosts = posts.filter(p => p.userId === req.query.userId);
-//   if (filteredPosts.length === 0) {
-//       return res.status(404).json({ error: "No posts found for the given userId" });
-//   }
-
-//   res.json(filteredPosts);
-// });
-
-
 router
   .route("/")
   .get((req, res) => {
@@ -44,7 +24,19 @@ router
       },
     ];
 
-    res.json({ posts, links });
+    //GET /api/posts?userId=<VALUE>
+    const userId = req.query.userId;
+    if (userId) {
+      const userPosts = posts.filter(post => post.userId == userId); // Filter posts by userId
+      if (userPosts.length > 0) {
+          res.status(200).json(userPosts);
+      } else {
+        res.status(404).send('No posts found for this user.');
+      }
+    }
+
+    else {
+    res.json({ posts, links });}
   })
   .post((req, res, next) => {
     if (req.body.userId && req.body.title && req.body.content) {
@@ -111,5 +103,36 @@ router
     if (post) res.json(post);
     else next();
   });
+
+
+//Retrieves comments made by the user with the specified id.
+// Retrieves comments made by the user with the specified id on the post with the specified postId.
+
+const comments = require("../data/comments");
+
+router.get('/:id/comments', (req, res) => {
+  const postId = req.params.id;
+
+  const userId = req.query.userId;
+  // console.log(userId);
+  
+  let commentsByPostId = comments.filter(c => c.postId == postId);
+  // console.log(commentsByPostId);
+  if (commentsByPostId.length > 0) {
+      if (userId) {
+        let commentsByPostIdAndUserID = commentsByPostId.filter(c => c.userId == userId);
+        // console.log(commentsByPostIdAndUserID);
+        if (commentsByPostIdAndUserID.length > 0) {
+          res.status(200).json(commentsByPostIdAndUserID);
+        }
+        else { console.log('No comments found for this post and user.')}
+      }
+      else 
+      res.status(200).json(commentsByPostId);
+  } else {
+      res.status(404).send('No posts found for this user.');
+  }
+});
+
 
 module.exports = router;

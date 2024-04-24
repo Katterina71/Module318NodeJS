@@ -82,4 +82,54 @@ router
   });
 
 
+ 
+// GET /api/users/:id/posts
+const posts = require('../data/posts');
+
+router.get('/:id/posts', (req, res) => {
+  const userId = req.params.id;
+  console.log(`Posts for userId: ${userId}`);
+
+  let postsByUserId = posts.filter(post => post.userId == userId);
+  console.log(postsByUserId);
+
+  if (postsByUserId.length > 0) {
+      res.status(200).json(postsByUserId);
+  } else {
+      res.status(404).send('No posts found for this user.');
+  }
+});
+
+//Retrieves comments made by the user with the specified id.
+// Retrieves comments made by the user with the specified id on the post with the specified postId.
+
+const comments = require("../data/comments");
+
+router.get('/:id/comments', (req, res) => {
+
+  const userId = req.params.id;
+  const postId = req.query.postId;
+
+  // console.log(userId);
+  // console.log(postId);
+  
+  let commentsByUserId = comments.filter(c => c.userId == userId);
+  console.log(commentsByUserId);
+  if (commentsByUserId.length > 0) {
+      if (postId) {
+        let commentsByUserIdAndPostID = commentsByUserId.filter(c => c.postId == postId);
+        // console.log(commentsByUserIdAndPostID);
+        if (commentsByUserIdAndPostID.length > 0) {
+          res.status(200).json(commentsByUserIdAndPostID);
+        }
+        else { console.log('No comments found for this post and user.')}
+      }
+      else 
+      res.status(200).json(commentsByUserId);
+  } else {
+      res.status(404).send('No posts found for this user.');
+  }
+});
+
+
 module.exports = router;
